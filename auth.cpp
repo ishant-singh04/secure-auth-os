@@ -1,14 +1,14 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
 
 string hashPassword(const string &password) {
     string hash = "";
-    for (char c : password) {
-        hash += (c + 3);
-    }
+    for (char c : password) hash += (c + 3);
     return hash;
 }
 
@@ -19,7 +19,6 @@ private:
 public:
     SecureAuth() {
         users["admin"] = hashPassword("Admin@123");
-        users["user"]  = hashPassword("User@123");
     }
 
     bool authenticate() {
@@ -29,14 +28,25 @@ public:
         cout << "Enter Password: ";
         cin >> password;
 
-        return users[username] == hashPassword(password);
+        if (users[username] != hashPassword(password))
+            return false;
+
+        srand(time(0));
+        int otp = rand() % 9000 + 1000;
+        cout << "OTP Generated: " << otp << endl;
+
+        int userOTP;
+        cout << "Enter OTP: ";
+        cin >> userOTP;
+
+        return otp == userOTP;
     }
 };
 
 int main() {
     SecureAuth auth;
     if (auth.authenticate())
-        cout << "Login successful\n";
+        cout << "Access Granted\n";
     else
-        cout << "Login failed\n";
+        cout << "Access Denied\n";
 }
