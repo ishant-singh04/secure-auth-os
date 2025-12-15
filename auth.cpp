@@ -4,14 +4,22 @@
 
 using namespace std;
 
+string hashPassword(const string &password) {
+    string hash = "";
+    for (char c : password) {
+        hash += (c + 3);
+    }
+    return hash;
+}
+
 class SecureAuth {
 private:
     map<string, string> users;
 
 public:
     SecureAuth() {
-        users["admin"] = "Admin@123";
-        users["user"]  = "User@123";
+        users["admin"] = hashPassword("Admin@123");
+        users["user"]  = hashPassword("User@123");
     }
 
     bool authenticate() {
@@ -21,7 +29,7 @@ public:
         cout << "Enter Password: ";
         cin >> password;
 
-        return users[username] == password;
+        return users[username] == hashPassword(password);
     }
 };
 
